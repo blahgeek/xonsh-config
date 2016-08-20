@@ -1,0 +1,59 @@
+import os
+
+# XONSH configs
+$AUTO_CD = True
+$CASE_SENSITIVE_COMPLETIONS = True
+$XONSH_COLOR_STYLE = 'native'
+
+$PROJECT_DIRS = ['~/Documents/projects']
+
+$PROMPT = ('{env_name:{} }' +
+           '{CYAN}{hostname} {YELLOW}{short_cwd}' +
+           '{NO_COLOR}{_gitprompt: {}}' +
+           '{ret_code_color}{ret_code}' +
+           '{NO_COLOR}> ')
+
+# ENVs
+$EDITOR = 'vim'
+
+# Aliase
+aliases['vi'] = ['vim', ]
+aliases['du'] = ['du', '-h']
+aliases['df'] = ['df', '-h']
+aliases['x']  = ['dtrx', '-r', '-n']
+aliases['mtr'] = ['mtr', '-t']
+aliases['ll'] = ['ls', '-alh']
+aliases['drop'] = ['open', '-a', 'Dropshelf']
+aliases['mypasswd'] = ['python2', '/Users/BlahGeek/Documents/projects/mypasswd/mypasswd.py']
+aliases['mkcd'] = lambda args, stdin=None: execx('mkdir {dir} and cd {dir}\n'.format(dir=args[0]))
+aliases['gitignore'] = lambda args, stdin=None: execx('curl -4 -s https://www.gitignore.io/api/' + ','.join(args) + '\n')
+aliases['fuck'] = lambda args, stdin=None: execx($(thefuck $(history -1)))
+
+# Some PATHs
+
+$GOPATH = $HOME + '/.golang'
+def _gopath_here(args, stdin=None):
+    $GOPATH = $HOME + '/.golang' + ':' + os.getcwd()
+    print("GOPATH:", $GOPATH)
+aliases['gopath_here'] = _gopath_here
+
+$PATH = ['~/.local/bin', '/usr/local/bin', '/usr/local/sbin', '~/.golang/bin', '/usr/bin', '/bin']
+for pathfile in `/etc/paths.d/.*`:
+    with open(pathfile) as _f:
+        $PATH.append(_f.read().strip())
+
+$BASH_COMPLETIONS = ['/usr/local/etc/bash_completion', ] + `/usr/local/etc/bash_completion.d/.*`
+
+#
+#$BASH_COMPLETIONS += os.path.join(_AUTOJUMP_DIR, 'autojump-completion.bash')
+_MODULES_PATH = $HOME + '/.config/xonsh'
+_MODULES = ('autojump.xsh', 'gitstatus.xsh')
+if os.path.isdir(_MODULES_PATH):
+    for _m in _MODULES:
+        source @(os.path.join(_MODULES_PATH, _m))
+
+xontrib load vox
+xontrib load avox
+xontrib load vox_tabcomplete
+xontrib load prompt_ret_code
+xontrib load distributed
