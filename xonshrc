@@ -3,13 +3,13 @@ import os
 # XONSH configs
 $AUTO_CD = True
 $CASE_SENSITIVE_COMPLETIONS = True
+$COMPLETIONS_CONFIRM = True
 $XONSH_COLOR_STYLE = 'native'
-
-$PROJECT_DIRS = ['~/Documents/projects']
+$UPDATE_OS_ENVIRON = True
 
 $PROMPT = ('{env_name:{} }' +
            '{CYAN}{hostname} {YELLOW}{short_cwd}' +
-           '{NO_COLOR}{_gitprompt: {}}' +
+           '{NO_COLOR}{gitstatus: {}}' +
            '{ret_code_color}{ret_code}' +
            '{NO_COLOR}> ')
 
@@ -37,23 +37,13 @@ def _gopath_here(args, stdin=None):
     print("GOPATH:", $GOPATH)
 aliases['gopath_here'] = _gopath_here
 
-$PATH = ['~/.local/bin', '/usr/local/bin', '/usr/local/sbin', '~/.golang/bin', '/usr/bin', '/bin']
-for pathfile in `/etc/paths.d/.*`:
-    with open(pathfile) as _f:
+$PATH = ['~/.local/bin', '/usr/local/bin', '/usr/local/sbin', '~/.golang/bin', '/usr/bin', '/usr/sbin', '/bin', '/sbin']
+for _pathfile in `/etc/paths.d/.*`:
+    with open(_pathfile) as _f:
         $PATH.append(_f.read().strip())
-
-$BASH_COMPLETIONS = ['/usr/local/etc/bash_completion', ] + `/usr/local/etc/bash_completion.d/.*`
-
-#
-#$BASH_COMPLETIONS += os.path.join(_AUTOJUMP_DIR, 'autojump-completion.bash')
-_MODULES_PATH = $HOME + '/.config/xonsh'
-_MODULES = ('autojump.xsh', 'gitstatus.xsh')
-if os.path.isdir(_MODULES_PATH):
-    for _m in _MODULES:
-        source @(os.path.join(_MODULES_PATH, _m))
 
 xontrib load vox
 xontrib load avox
 xontrib load vox_tabcomplete
 xontrib load prompt_ret_code
-xontrib load distributed
+xontrib load autojump
