@@ -9,12 +9,14 @@ $UPDATE_OS_ENVIRON = True
 
 $PROMPT = ('{env_name:{} }' +
            '{CYAN}{hostname} {YELLOW}{short_cwd}' +
-           '{NO_COLOR}{gitstatus: {}}' +
+           '{NO_COLOR}{gitstatus: [{}]}' +
            '{ret_code_color}{ret_code}' +
            '{NO_COLOR}> ')
 
 # ENVs
 $EDITOR = 'vim'
+
+$PROJECT_DIRS = ['~/Documents/projects']
 
 # Aliase
 aliases['vi'] = ['vim', ]
